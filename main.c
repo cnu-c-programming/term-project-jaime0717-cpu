@@ -19,7 +19,7 @@
 #include <string.h>
 
 /* TODO: Add your own header includes here */
-/* #include "student.h"  */
+#include "student.h"
 /* #include "file_io.h"  */
 /* #include "command.h"  */
 
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     }
 
 #else
-#error "Define either -DADMIN_MODE or -DCLIENT_MODE when compiling."
+//#error "Define either -DADMIN_MODE or -DCLIENT_MODE when compiling."
 #endif
 
     return 0;
