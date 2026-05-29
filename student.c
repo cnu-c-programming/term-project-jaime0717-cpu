@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+
 #include "student.h" //어딘가에서 배웠었는데..
 
 int main()
@@ -19,21 +21,33 @@ void reload()
 
 void add(int id, char *name, int score, Student *head)
 {
-    Student newstudent = {.id=id, .score = score, .next = NULL};
+    Student newstudent = {.id = id, .score = score, .next = NULL};
     int i = 0;
-    while(*name != '\0') {
+    while (*name != '\0')
+    {
         newstudent.name[i] = *name;
+        i++;
         name++;
     }
+    newstudent.name[i] = '\0';
 
-    Student* add_newstudent;
-    *add_newstudent = newstudent; 
+    Student *add_newstudent;
+    *add_newstudent = newstudent;
 
-    Student* serching = head;
-    while(serching->next != NULL) {
-        serching = serching->next;
+    Student *serching = head;
+
+    if (head == NULL)
+    {
+        head = add_newstudent;
     }
-    serching->next = add_newstudent;
+    else
+    {
+        while (serching->next != NULL)
+        {
+            serching = serching->next;
+        }
+        serching->next = add_newstudent;
+    }
 }
 
 void delete_student(int id) // delete라는 함수가 이미 있어서 이름을 저렇게 처리.
@@ -44,8 +58,17 @@ void update(int id, int score)
 {
 }
 
-void find(int id)
+void find(int id, Student *head)
 {
+    Student *serching = head;
+    while (serching->next != NULL)
+    {
+        if (serching->id == id)
+        {
+            printf("ID: %d\nName: %s\nScore: %d",serching->id, serching->name, serching->score);
+            return 0;
+        }
+    }
 }
 
 void list(void)
@@ -75,6 +98,6 @@ void clear(void)
 {
 }
 
-void exit(void)
+void exit_student(void) // exit이라는 함수가 이미 있어서 이름을 저렇게 처리.
 {
 }

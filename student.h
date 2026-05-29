@@ -15,7 +15,7 @@ void delete_student(int id); //delete라는 함수가 이미 있어서 이름을
 
 void update(int id, int score);
 
-void find(int id);
+void find(int id, Student* head);
 
 void list(void);
 
@@ -25,4 +25,4 @@ void help(void);
 
 void clear(void);
 
-void exit(void);
+void exit_student(void); // exit이라는 함수가 이미 있어서 이름을 저렇게 처리.
