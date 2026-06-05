@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "student.h" //어딘가에서 배웠었는데..
+#include "student.h"
+#include "command.h"
 
 int main()
 {
@@ -11,15 +12,7 @@ int main()
     static int count = 0;
 }
 
-void save()
-{
-}
-
-void reload()
-{
-}
-
-void add(int id, char *name, int score, Student *head)
+void handle_add(int id, char *name, int score)
 {
     Student newstudent = {.id = id, .score = score, .next = NULL};
     int i = 0;
@@ -50,54 +43,55 @@ void add(int id, char *name, int score, Student *head)
     }
 }
 
-void delete_student(int id) // delete라는 함수가 이미 있어서 이름을 저렇게 처리.
+void handle_delete(int id)
 {
 }
 
-void update(int id, int score)
+void handle_update(int id, int score)
 {
 }
 
-void find(int id, Student *head)
+void handle_find(int id)
 {
     Student *serching = head;
     while (serching->next != NULL)
     {
         if (serching->id == id)
         {
-            printf("ID: %d\nName: %s\nScore: %d",serching->id, serching->name, serching->score);
+            printf("ID: %d\nName: %s\nScore: %d", serching->id, serching->name, serching->score);
             return 0;
         }
     }
 }
 
-void list(void)
+void handle_list(void)
 {
 }
 
-void stats(void)
+void handle_stats(void)
 {
 }
 
-void help()
+void handle_help(void)
 {
     printf("Commands:\n");
-    printf("save                         Save students to CSV\n");
-    printf("reload                       Reload students from CSV\n");
-    printf("add <id> <name> <score>      Add a student\n");
-    printf("delete <id>                  Delete a student\n");
-    printf("update <id> <score>          Update student score\n");
-    printf("find <id>                    Find student by ID\n");
-    printf("list                         List all students\n");
-    printf("stats                        Show statistics\n");
-    printf("clear                        Clear screen\n");
-    printf("exit                         Exit program");
+
+
+    extern Command commands[];
+    Command *commands_pointer = commands;
+
+
+    while (commands_pointer->usage != NULL)
+    {
+        printf("%-30s %s", commands_pointer->usage, commands_pointer->description);
+        commands_pointer++;
+    }
 }
 
-void clear(void)
+void handle_clear(void)
 {
 }
 
-void exit_student(void) // exit이라는 함수가 이미 있어서 이름을 저렇게 처리.
+void handle_exit(void)
 {
 }

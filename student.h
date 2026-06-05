@@ -5,24 +5,22 @@ typedef struct Student {
     struct Student* next;
 } Student;
 
-void save(void);
+extern Student* head;
 
-void reload(void);
+void handle_add(int id, char* name, int score);
 
-void add(int id, char* name, int score, Student* head);
+void handle_delete(int id);
 
-void delete_student(int id); //delete라는 함수가 이미 있어서 이름을 저렇게 처리.
+void handle_update(int id, int score);
 
-void update(int id, int score);
+void handle_find(int id);
 
-void find(int id, Student* head);
+void handle_list(void);
 
-void list(void);
+void handle_stats(void);
 
-void stats(void);
+void handle_help(void);
 
-void help(void);
+void handle_clear(void);
 
-void clear(void);
-
-void exit_student(void); // exit이라는 함수가 이미 있어서 이름을 저렇게 처리.
+void handle_exit(void); 
