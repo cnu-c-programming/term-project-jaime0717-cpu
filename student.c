@@ -90,7 +90,7 @@ void handle_update(int id, int score)
         // 없을 경우 처리
     }
 
-    while (serching->id != id) //head가 바로면, while문 지나쳐서 바로.(위 delete와 다름)
+    while (serching->id != id) // head가 바로면, while문 지나쳐서 바로.(위 delete와 다름)
     {
         if (serching->next == NULL)
         {
@@ -98,10 +98,9 @@ void handle_update(int id, int score)
         }
         serching = serching->next;
     }
-        serching->score = score;
-        printf("Student updated");
-        return;
-    
+    serching->score = score;
+    printf("Student updated");
+    return;
 }
 
 void handle_find(int id)
@@ -119,20 +118,56 @@ void handle_find(int id)
             // 없을 경우 처리
         }
         serching = serching->next;
-    } 
-        printf("ID: %d\nName: %s\nScore: %d", serching->id, serching->name, serching->score); //첫항이어도 똑같은 결과
-        return;
+    }
+    printf("ID: %d\nName: %s\nScore: %d", serching->id, serching->name, serching->score); // 첫항이어도 똑같은 결과
+    return;
 }
 
 void handle_list(void)
 {
+    if (head == NULL)
+    {
+        // 없을 경우 처리
+    }
+
+    Student *checking = head;
+    int count = 0;
+
+    printf("ID   Name       Score\n"); // id 3 2, name 10 1, score
+    while (checking != NULL)
+    {
+        printf("%-3d  %-10s %d", checking->id, checking->name, checking->score);
+        checking = checking->next;
+    }
 }
 
 void handle_stats(void)
 {
+    if (head == NULL)
+    {
+        // 없을 경우 처리
+    }
+    Student *checking = head;
+    int count = 1;
+    int sum = 0, max = 0, min = 0;
+
+    while (checking != NULL)
+    {
+        ++count;
+
+        sum += checking->score;
+        if (checking->score > max)
+            max = checking->score;
+        if (checking->score > max < min)
+            min = checking->score;
+
+        checking = checking->next;
+    }
+
+    printf("Count: %d\nAverage: %f\nMax: %d\nMin: %d\n", count, sum / (float)count, max, min);
 }
 
-void handle_help(void)
+void handle_help(void) // 잘 작동할지 헷갈리니 무조건 테스트 해보기
 {
     printf("Commands:\n");
 
@@ -148,8 +183,18 @@ void handle_help(void)
 
 void handle_clear(void)
 {
+    printf("\033[2J\033[H"); // 이거 하나면 되나?
 }
 
 void handle_exit(void)
 {
+    Student *temp = NULL;
+    while (head != NULL)
+    {
+        temp = head;
+        head = head->next;
+        free(temp);
+        temp = NULL;
+    }
+    printf("Goodbye.");
 }
