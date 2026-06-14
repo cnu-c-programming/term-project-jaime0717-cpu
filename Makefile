@@ -16,3 +16,6 @@ client:
 
 clean:
 	rm -f admin_shell client_shell *.o
+
+%.o: %.c
+	$(CC) -c $< -o $@ //넣어야 할 것 같음. 

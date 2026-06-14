@@ -1,4 +1,4 @@
-typedef struct Student {
+typedef struct Student { //5
     int id;
     char name[32];
     int score;
