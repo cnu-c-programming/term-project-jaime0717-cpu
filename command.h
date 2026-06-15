@@ -1,3 +1,4 @@
+#pragma once
 #include "student.h"
 
 typedef enum
@@ -24,8 +25,12 @@ typedef struct
     const char *description;
 } Command;
 
+ShellResult handle_add(char *args, Student **head);
+
 #ifdef ADMIN_MODE //11
 extern Command commands[];
+
+ShellResult handle_add(char *args, Student **head);
 #endif
 
 #ifdef CLIENT_MODE //7

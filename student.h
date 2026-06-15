@@ -1,3 +1,6 @@
+#pragma once //header guard
+#include "command.h"
+
 typedef struct Student { //5
     int id;
     char name[32];
@@ -7,20 +10,20 @@ typedef struct Student { //5
 
 extern Student* head;
 
-void handle_add(int id, char* name, int score);
+ShellResult add_student(int id, char* name, int score, Student **head);
 
-void handle_delete(int id);
+ShellResult delete_student(int id, Student **head);
 
-void handle_update(int id, int score);
+ShellResult update_student(int id, int score, Student **head);
 
-void handle_find(int id);
+ShellResult find_student(int id, Student **head);
 
-void handle_list(void);
+ShellResult list_student(Student **head);
 
-void handle_stats(void);
+ShellResult stats_student(Student **head);
 
-void handle_help(void);
+ShellResult help_student(Student **head);
 
-void handle_clear(void);
+ShellResult clear_student(Student **head);
 
-void handle_exit(void); 
+ShellResult exit_student(Student **head); 

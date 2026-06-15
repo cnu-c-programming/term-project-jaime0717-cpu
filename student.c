@@ -4,28 +4,41 @@
 #include "student.h"
 #include "command.h"
 
-int main()
-{
-    Student *head = NULL;
-
-    static int count = 0;
-}
-
-void handle_add(int id, char *name, int score)
+//#ifdef ADMIN_MODE
+ShellResult add_student(int id, char *name, int score, Student **head)
 {
     Student newstudent = {.id = id, .score = score, .next = NULL};
     int i = 0;
     // 이름 추가
     strcpy(newstudent.name, name);
 
+    //중복 id 확인.
+    if(find_student(id, head)==SHELL_OK) return SHELL_ERR_DUPLICATE_STUDENT;
+
+    //잘못된 이름. 빈 이름이거나 ,가 들어간 이름
+    if(name[0]=='\n') return SHELL_ERR_INVALID_ARGUMENT;
+    for(int i = 0; i<strlen(name); i++) {
+        if(name[i]==',') return SHELL_ERR_INVALID_ARGUMENT;
+    }
+    
+    // score관련 예외 처리
+    if (!(score >= 0 && score <= 100))
+    {
+        // 점수 범위 오류
+        return SHELL_ERR_INVALID_SCORE;
+    } 
+
+    //인자 부족, 잘못된 점수는 handle_add에서
+    
+
     Student *add_newstudent = malloc(sizeof(Student)); // 새로 추가될 주소 메모리 할당.
     *add_newstudent = newstudent;
 
-    Student *serching = head;
+    Student *serching = *head;
 
-    if (head == NULL)
+    if (*head == NULL)
     {
-        head = add_newstudent;
+        *head = add_newstudent;
     }
     else
     {
@@ -75,17 +88,18 @@ void handle_delete(int id)
     }
 }
 
-void handle_update(int id, int score)
+ShellResult handle_update(int id, int score, Student **head)
 {
     // score관련 예외 처리
     if (!(score >= 0 && score <= 100))
     {
         // score 범위랑 안맞음
+        return SHELL_ERR_INVALID_SCORE;
     }
 
     // 본론
-    Student *serching = head;
-    if (head == NULL)
+    Student *serching = *head;
+    if (*head == NULL)
     {
         // 없을 경우 처리
     }
@@ -102,25 +116,28 @@ void handle_update(int id, int score)
     printf("Student updated");
     return;
 }
+//#elif defined(ADMIN_MODE) || defined(CLIENT_MODE)
 
-void handle_find(int id)
+ShellResult find_student(int id, Student **head)
 {
-    Student *serching = head;
-    if (head == NULL)
+    Student *serching = *head;
+    if (*head == NULL)
     {
-        // 없을 경우 처리
+        //없을 경우 처리
+        return SHELL_ERR_STUDENT_NOT_FOUND;
     }
 
     while (serching->id != id)
     {
         if (serching->next == NULL)
         {
-            // 없을 경우 처리
+            //없을 경우 처리
+            return SHELL_ERR_STUDENT_NOT_FOUND;
         }
         serching = serching->next;
     }
-    printf("ID: %d\nName: %s\nScore: %d", serching->id, serching->name, serching->score); // 첫항이어도 똑같은 결과
-    return;
+    printf("ID: %d\nName: %s\nScore: %d\n", serching->id, serching->name, serching->score); // 첫항이어도 똑같은 결과
+    return SHELL_OK;
 }
 
 void handle_list(void)
@@ -198,3 +215,4 @@ void handle_exit(void)
     }
     printf("Goodbye.");
 }
+//#endif

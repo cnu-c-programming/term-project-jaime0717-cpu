@@ -26,7 +26,6 @@ void handle_save()
     printf("Saved %d students to students.csv.", count);
     fclose(fp);
 }
-#else
 #endif
 
 void handle_reload()
