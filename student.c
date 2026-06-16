@@ -4,6 +4,7 @@
 #include "student.h"
 #include "command.h"
 
+
 //#ifdef ADMIN_MODE
 ShellResult add_student(int id, char *name, int score, Student **head)
 {
@@ -48,6 +49,8 @@ ShellResult add_student(int id, char *name, int score, Student **head)
         }
         serching->next = add_newstudent;
     }
+
+    return SHELL_OK;
 }
 
 void handle_delete(int id)
@@ -193,7 +196,7 @@ void handle_help(void) // 잘 작동할지 헷갈리니 무조건 테스트 해�
 
     while (commands_pointer->usage != NULL)
     {
-        printf("%-30s %s", commands_pointer->usage, commands_pointer->description);
+        printf("%-30s %s\n", commands_pointer->usage, commands_pointer->description);
         commands_pointer++;
     }
 }

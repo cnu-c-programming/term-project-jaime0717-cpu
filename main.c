@@ -35,14 +35,15 @@ void run_shell(const char *csv_path)
     /* TODO */
     (void)csv_path;
 
-    int error = 0;
+    ShellResult error;
+
     char *parameter, function;
     while (1)
     {
 #ifdef ADMIN_MODE
-        printf("[admin>");
+        printf("admin>");
 #elif defined(CLIENT_MODE)
-        printf("client");
+        printf("client>");
 #endif
         // 빈 공백은 특별하게 처리.
         char line[100];
@@ -50,19 +51,37 @@ void run_shell(const char *csv_path)
         int result = sscanf(line, "%s %[^\n]", function, parameter);
         if (result == 0 || result == EOF)
         {
-            return;
+            return; // 0이나 공백이면 loop 끝
         }
-        
-        /*if (result == 1) //사실 이건 handle로 처리할 떄 어떻게 해도 될 듯.
+        else
         {
-            // parameter 부족 오류.
-        }*/ 
 
-        // command에 등록된 명령어인지 살펴봄, 있으면 handle이용해서 실행, 없으면 ShellResult로 오류.
+            /*if (result == 1) //사실 이건 handle로 처리할 떄 어떻게 해도 될 듯.
+            {
+                // parameter 부족 오류.
+            }*/
 
-        // ShellResult로 결과 받아준 다음, 오류 있으면 관련 메시지 출력.
+            // command에 등록된 명령어인지 살펴봄, 있으면 handle이용해서 실행, 없으면 ShellResult로 오류.
+            extern Command commands[];
+            Command *commands_pointer = commands;
 
-        // exit은 특별하게 처리.
+            while (commands_pointer != NULL)
+            {
+                if (strcmp(commands_pointer->name, function) ==0)
+                    break;
+                commands_pointer++;
+            }
+            if (commands_pointer == NULL)
+            {
+                error = SHELL_ERR_UNKNOWN_COMMAND;
+            } else{
+                error = commands_pointer->handler(parameter, &head); //여기서 함수 실행, error에는 함수가 정상적으로 실행됐을 경우 0(그 command에 있는 거) 반환
+            }
+
+            // ShellResult로 결과 받아준 다음, 오류 있으면 관련 메시지 출력.
+
+            // exit은 특별하게 처리.
+        }
     }
 }
 
@@ -101,6 +120,9 @@ int main(int argc, char *argv[])
      */
     (void)argc;
     (void)argv;
+    
+    Student* head = NULL; //원래 student 파일에 있었는데, 함수들ㅇ **head를 인자로 받는 걸 보고, 여기로 이동!
+
 
 // 2.csv 파일에서 학생 정보 읽어오기
 #ifdef ADMIN_MODE
@@ -110,7 +132,6 @@ int main(int argc, char *argv[])
 #endif
 
     // 준비, file_io에 있는 reload 재활용
-    extern Student *head;
     FILE *fp = fopen(csv_path, "r");
     if (fp == NULL)
     { // 습관성 체크
