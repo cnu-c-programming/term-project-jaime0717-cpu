@@ -1,5 +1,5 @@
 #pragma once
-#include "student.h"
+typedef struct Student Student;
 
 typedef enum
 {
@@ -25,14 +25,17 @@ typedef struct
     const char *description;
 } Command;
 
+//handle 명령어들
 ShellResult handle_add(char *args, Student **head);
 
-#ifdef ADMIN_MODE //11
-extern Command commands[];
+ShellResult handle_delete(char *args, Student **head);
 
-ShellResult handle_add(char *args, Student **head);
-#endif
+ShellResult handle_update(char *args, Student **head);
 
-#ifdef CLIENT_MODE //7
-extern Command commands[];
-#endif
+ShellResult handle_find(char *args, Student **head);
+
+ShellResult handle_list(char *args, Student **head);
+
+
+extern Command commands[]; //일단 main에 오류 안일어나게
+

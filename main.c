@@ -37,7 +37,8 @@ void run_shell(const char *csv_path)
 
     ShellResult error;
 
-    char *parameter, function;
+    char parameter[100] = {0};
+    char function[17] = {0}; //그냥 17을 좋아해서
     while (1)
     {
 #ifdef ADMIN_MODE
@@ -45,7 +46,7 @@ void run_shell(const char *csv_path)
 #elif defined(CLIENT_MODE)
         printf("client>");
 #endif
-        // 빈 공백은 특별하게 처리.
+
         char line[100];
         fgets(line, sizeof line, stdin);
         int result = sscanf(line, "%s %[^\n]", function, parameter);
@@ -55,32 +56,41 @@ void run_shell(const char *csv_path)
         }
         else
         {
-
-            /*if (result == 1) //사실 이건 handle로 처리할 떄 어떻게 해도 될 듯.
-            {
-                // parameter 부족 오류.
-            }*/
-
             // command에 등록된 명령어인지 살펴봄, 있으면 handle이용해서 실행, 없으면 ShellResult로 오류.
-            extern Command commands[];
+            
             Command *commands_pointer = commands;
 
-            while (commands_pointer != NULL)
+            while (commands_pointer->name != NULL)
             {
-                if (strcmp(commands_pointer->name, function) ==0)
+                if (strcmp(commands_pointer->name, function) == 0)
                     break;
                 commands_pointer++;
             }
-            if (commands_pointer == NULL)
+            if (commands_pointer->name == NULL)
             {
                 error = SHELL_ERR_UNKNOWN_COMMAND;
-            } else{
-                error = commands_pointer->handler(parameter, &head); //여기서 함수 실행, error에는 함수가 정상적으로 실행됐을 경우 0(그 command에 있는 거) 반환
+            }
+            else
+            {
+                error = commands_pointer->handler(parameter, &head); // 여기서 함수 실행, error에는 함수가 정상적으로 실행됐을 경우 0(그 command에 있는 거) 반환
             }
 
             // ShellResult로 결과 받아준 다음, 오류 있으면 관련 메시지 출력.
-
-            // exit은 특별하게 처리.
+            switch (error)
+            {
+            case SHELL_OK:
+                break;
+            case SHELL_EXIT: // exit은 특별하게 처리.
+                return;
+            case SHELL_ERR_UNKNOWN_COMMAND:
+            case SHELL_ERR_INVALID_ARGUMENT:
+            case SHELL_ERR_MISSING_ARGUMENT:
+            case SHELL_ERR_FILE_OPEN:
+            case SHELL_ERR_FILE_WRITE:
+            case SHELL_ERR_STUDENT_NOT_FOUND:
+            case SHELL_ERR_DUPLICATE_STUDENT:
+            case SHELL_ERR_INVALID_SCORE:
+            }
         }
     }
 }
@@ -120,9 +130,6 @@ int main(int argc, char *argv[])
      */
     (void)argc;
     (void)argv;
-    
-    Student* head = NULL; //원래 student 파일에 있었는데, 함수들ㅇ **head를 인자로 받는 걸 보고, 여기로 이동!
-
 
 // 2.csv 파일에서 학생 정보 읽어오기
 #ifdef ADMIN_MODE

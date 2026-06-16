@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include "file_io.h"
-#include "student.h"
+#include "student.h" //head 사용 가능!
 
-#ifdef ADMIN_MODE
+//#ifdef ADMIN_MODE
 void handle_save()
 {
-    FILE *fp = fopen("students.csv", "w"); //"students.csv" 여기서 이걸 그대로 쓰는 게 맞는지 모르겠다.
+    extern const char *csv_path;
+    FILE *fp = fopen(csv_path, "w"); //"students.csv" 여기서 이걸 그대로 쓰는 게 맞는지 모르겠다.
     if (fp == NULL)
     { // 습관성 체크
         return;
@@ -13,7 +14,6 @@ void handle_save()
 
     fprintf(fp, "id,name,score\n");
 
-    extern Student *head;
     Student *checking = head;
     int count = 0;
 
@@ -26,7 +26,7 @@ void handle_save()
     printf("Saved %d students to students.csv.", count);
     fclose(fp);
 }
-#endif
+//#endif
 
 void handle_reload()
 {
