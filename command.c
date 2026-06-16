@@ -118,14 +118,15 @@ ShellResult handle_exit(char *args, Student **head)
     return exit_student;
 }
 
-ShellResult handle_save(char *args, Student **head) {
+ShellResult handle_save(char *args, Student **head)
+{
     return save_student;
 }
 
-ShellResult handle_reload(char *args, Student **head) {
+ShellResult handle_reload(char *args, Student **head)
+{
     return reload_student;
 }
-
 
 #ifdef ADMIN_MODE // 11
 Command commands[] = {

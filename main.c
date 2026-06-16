@@ -37,8 +37,6 @@ void run_shell(const char *csv_path)
 
     ShellResult error;
 
-    char parameter[100] = {0};
-    char function[17] = {0}; // 그냥 17을 좋아해서
     while (1)
     {
 #ifdef ADMIN_MODE
@@ -47,12 +45,18 @@ void run_shell(const char *csv_path)
         printf("client>");
 #endif
 
-        char line[100];
-        fgets(line, sizeof line, stdin);
+        char parameter[100] = {0};
+        char function[17] = {0}; // 그냥 17을 좋아해서
+
+        char line[100] = {0};
+        if (fgets(line, sizeof line, stdin) == NULL)
+            return; // EOF
+
         int result = sscanf(line, "%s %[^\n]", function, parameter);
-        if (result == 0 || result == EOF)
+
+        if (result == 0)
         {
-            return; // 0이나 공백이면 loop 끝
+            continue; // 다시 받기
         }
         else
         {
@@ -73,11 +77,9 @@ void run_shell(const char *csv_path)
             else
             {
                 // file_io에 정의된 save와 load의 경우 csv_path가 필요하기 때문에 따로 parameter에 넣어주기.
-                if (strcmp("save", function) || strcmp("reload", function))
+                if (strcmp("save", function) == 0 || strcmp("reload", function) == 0)
                 {
-                    char parameter_for_io[300] = {0};
-                    sprintf(parameter_for_io, "%s %s", csv_path, parameter);
-                    error = commands_pointer->handler(parameter_for_io, &head);
+                    error = commands_pointer->handler((char*)csv_path, &head); // save와 load는 다른 parameter가 필요없으므로, csv_path만 넘겨주기
                 }
                 else
                 {
@@ -93,13 +95,29 @@ void run_shell(const char *csv_path)
             case SHELL_EXIT: // exit은 특별하게 처리.
                 return;
             case SHELL_ERR_UNKNOWN_COMMAND:
+                printf("Error: Unknown Command\n");
+                break;
             case SHELL_ERR_INVALID_ARGUMENT:
+                printf("Error: Invalid Argument\n");
+                break;
             case SHELL_ERR_MISSING_ARGUMENT:
+                printf("Error: Missing Argument\n");
+                break;
             case SHELL_ERR_FILE_OPEN:
+                printf("Error: While File Opening\n");
+                break;
             case SHELL_ERR_FILE_WRITE:
+                printf("Error: While File Writing\n");
+                break;
             case SHELL_ERR_STUDENT_NOT_FOUND:
+                printf("Error: Student Not Found\n");
+                break;
             case SHELL_ERR_DUPLICATE_STUDENT:
+                printf("Error: Duplicate Student\n");
+                break;
             case SHELL_ERR_INVALID_SCORE:
+                printf("Error: Invalid Score\n");
+                break;
             }
         }
     }
@@ -152,25 +170,42 @@ int main(int argc, char *argv[])
     FILE *fp = fopen(csv_path, "r");
     if (fp == NULL)
     { // 습관성 체크
-        return;
+        printf("Error: While File Opening\n");
     }
-
-    // 맨 위 header 처리.
-    char header_trash[100];
-    fgets(header_trash, sizeof header_trash, fp);
-
-    // 파일 읽어주기
-    Student read_student;
-
-    int count = 0;
-    while (fscanf(fp, "%d,%[^,],%d\n", &read_student.id, read_student.name, &read_student.score) == 3) //[^,]부분..
+    else
     {
-        handle_add(read_student.id, read_student.name, read_student.score); // 3.저장.
-        ++count;
-    }
-    printf("Loaded %d students from %s.", count, csv_path);
+        // 맨 위 header 처리.
+        char header_trash[100];
+        if (fgets(header_trash, sizeof header_trash, fp) == NULL)
+        {
+            printf("Error: While File Opening\n");
+        }
+        else
+        {
+            // 파일 읽어주기
+            Student read_student;
 
-    fclose(fp);
+            int count = 0;
+            char line[300] = {0};
+            char formatted_line[300] = {0};
+            while (fgets(line, sizeof line, fp) != NULL) //[^,]부분.. fscanf(line, "%d,%[^,],%d\n", &read_student.id, read_student.name, &read_student.score) == 3
+            {
+                if (sscanf(line, "%d,%[^,],%d\n", &read_student.id, read_student.name, &read_student.score) == 3)
+                {
+                    sprintf(formatted_line, "%d %s %d", read_student.id, read_student.name, read_student.score);
+                    handle_add(formatted_line, &head); // 3.저장.
+                    ++count;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            printf("Loaded %d students from %s.", count, csv_path);
+
+            fclose(fp);
+        }
+    }
 
 #ifdef ADMIN_MODE
     /* Admin shell: supports add, delete, update, save, load, sort, list, find, help, exit */
