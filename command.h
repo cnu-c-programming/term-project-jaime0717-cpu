@@ -36,6 +36,21 @@ ShellResult handle_find(char *args, Student **head);
 
 ShellResult handle_list(char *args, Student **head);
 
+ShellResult handle_stats(char *args, Student **head);
+
+ShellResult handle_help(char *args, Student **head);
+
+ShellResult handle_clear(char *args, Student **head);
+
+ShellResult handle_exit(char *args, Student **head);
+
+ShellResult handle_save(char *args, Student **head);
+
+ShellResult handle_reload(char *args, Student **head);
+
+
+
+
 
 extern Command commands[]; //일단 main에 오류 안일어나게
 

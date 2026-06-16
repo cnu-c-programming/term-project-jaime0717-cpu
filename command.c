@@ -89,6 +89,44 @@ ShellResult handle_list(char *args, Student **head)
     return list_student(head);
 }
 
+ShellResult handle_stats(char *args, Student **head)
+{
+    return stats_student(head);
+}
+
+ShellResult handle_help(char *args, Student **head)
+{
+    (void)args;
+    (void)head;
+
+    return help_student();
+}
+
+ShellResult handle_clear(char *args, Student **head)
+{
+    (void)args;
+    (void)head;
+
+    return clear_student();
+}
+
+ShellResult handle_exit(char *args, Student **head)
+{
+    (void)args;
+    (void)head;
+
+    return exit_student;
+}
+
+ShellResult handle_save(char *args, Student **head) {
+    return save_student;
+}
+
+ShellResult handle_reload(char *args, Student **head) {
+    return reload_student;
+}
+
+
 #ifdef ADMIN_MODE // 11
 Command commands[] = {
     {"save", handle_save, "save", "Save students to CSV"},

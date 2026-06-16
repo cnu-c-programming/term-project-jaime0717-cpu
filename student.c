@@ -6,7 +6,7 @@
 
 Student *head = NULL; // 원래 student 파일에 있었는데, 함수들ㅇ **head를 인자로 받는 걸 보고, 여기로 이동! 다시 여기로! linked list는 여기서 구현해라.
 
-// #ifdef ADMIN_MODE
+#ifdef ADMIN_MODE
 ShellResult add_student(int id, char *name, int score, Student **head)
 {
     Student newstudent = {.id = id, .score = score, .next = NULL};
@@ -133,15 +133,16 @@ ShellResult update_student(int id, int score, Student **head)
     printf("Student updated");
     return SHELL_OK;
 }
-// #elif defined(ADMIN_MODE) || defined(CLIENT_MODE)
+
+#elif defined(ADMIN_MODE) || defined(CLIENT_MODE)
 
 ShellResult find_student(int id, Student **head)
 {
     // id 0 or 음수
     if (id < 0 || id == 0)
         return SHELL_ERR_INVALID_ARGUMENT;
-    
-    //본론
+
+    // 본론
     Student *serching = *head;
     if (*head == NULL)
     {
@@ -182,13 +183,14 @@ ShellResult list_student(Student **head)
     return SHELL_OK;
 }
 
-void handle_stats(void)
+ShellResult stats_student(Student **head)
 {
-    if (head == NULL)
+    if (*head == NULL)
     {
         // 없을 경우 처리
+        return SHELL_ERR_STUDENT_NOT_FOUND;
     }
-    Student *checking = head;
+    Student *checking = *head;
     int count = 1;
     int sum = 0, max = 0, min = 0;
 
@@ -199,16 +201,17 @@ void handle_stats(void)
         sum += checking->score;
         if (checking->score > max)
             max = checking->score;
-        if (checking->score > max < min)
+        if (checking->score < min)
             min = checking->score;
 
         checking = checking->next;
     }
 
     printf("Count: %d\nAverage: %f\nMax: %d\nMin: %d\n", count, sum / (float)count, max, min);
+    return SHELL_OK;
 }
 
-void handle_help(void) // 잘 작동할지 헷갈리니 무조건 테스트 해보기
+ShellResult help_student(void)
 {
     printf("Commands:\n");
 
@@ -220,23 +223,26 @@ void handle_help(void) // 잘 작동할지 헷갈리니 무조건 테스트 해�
         printf("%-30s %s\n", commands_pointer->usage, commands_pointer->description);
         commands_pointer++;
     }
+    return SHELL_OK;
 }
 
-void handle_clear(void)
+ShellResult clear_student(void)
 {
     printf("\033[2J\033[H"); // 이거 하나면 되나?
+    return SHELL_OK;
 }
 
-void handle_exit(void)
+ShellResult exit_student(Student **head)
 {
     Student *temp = NULL;
-    while (head != NULL)
+    while (*head != NULL)
     {
-        temp = head;
-        head = head->next;
+        temp = *head;
+        *head = (*head)->next;
         free(temp);
         temp = NULL;
     }
     printf("Goodbye.");
+    return SHELL_EXIT;
 }
-// #endif
+#endif

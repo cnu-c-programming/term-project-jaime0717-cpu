@@ -1,5 +1,5 @@
 #pragma once
 
-void handle_save(void);
+ShellResult save_student(const char *csv_path, Student **head);
 
-void handle_reload(void);
+ShellResult reload_student(const char *csv_path, Student **head);

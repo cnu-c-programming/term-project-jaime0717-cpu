@@ -22,8 +22,8 @@ ShellResult list_student(Student **head);
 
 ShellResult stats_student(Student **head);
 
-ShellResult help_student(Student **head);
+ShellResult help_student(void);
 
-ShellResult clear_student(Student **head);
+ShellResult clear_student(void);
 
 ShellResult exit_student(Student **head); 

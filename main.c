@@ -38,7 +38,7 @@ void run_shell(const char *csv_path)
     ShellResult error;
 
     char parameter[100] = {0};
-    char function[17] = {0}; //그냥 17을 좋아해서
+    char function[17] = {0}; // 그냥 17을 좋아해서
     while (1)
     {
 #ifdef ADMIN_MODE
@@ -57,7 +57,7 @@ void run_shell(const char *csv_path)
         else
         {
             // command에 등록된 명령어인지 살펴봄, 있으면 handle이용해서 실행, 없으면 ShellResult로 오류.
-            
+
             Command *commands_pointer = commands;
 
             while (commands_pointer->name != NULL)
@@ -72,7 +72,17 @@ void run_shell(const char *csv_path)
             }
             else
             {
-                error = commands_pointer->handler(parameter, &head); // 여기서 함수 실행, error에는 함수가 정상적으로 실행됐을 경우 0(그 command에 있는 거) 반환
+                // file_io에 정의된 save와 load의 경우 csv_path가 필요하기 때문에 따로 parameter에 넣어주기.
+                if (strcmp("save", function) || strcmp("reload", function))
+                {
+                    char parameter_for_io[300] = {0};
+                    sprintf(parameter_for_io, "%s %s", csv_path, parameter);
+                    error = commands_pointer->handler(parameter_for_io, &head);
+                }
+                else
+                {
+                    error = commands_pointer->handler(parameter, &head); // 여기서 함수 실행, error에는 함수가 정상적으로 실행됐을 경우 0(그 command에 있는 거) 반환
+                }
             }
 
             // ShellResult로 결과 받아준 다음, 오류 있으면 관련 메시지 출력.
