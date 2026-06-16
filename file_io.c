@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "file_io.h"
 #include "student.h" //head 사용 가능!
 

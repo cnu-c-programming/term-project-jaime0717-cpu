@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "command.h"
 #include "file_io.h"
 #include "student.h"
@@ -115,17 +117,17 @@ ShellResult handle_exit(char *args, Student **head)
     (void)args;
     (void)head;
 
-    return exit_student;
+    return exit_student(head);
 }
 
 ShellResult handle_save(char *args, Student **head)
 {
-    return save_student;
+    return save_student(args,head);
 }
 
 ShellResult handle_reload(char *args, Student **head)
 {
-    return reload_student;
+    return reload_student(args,head);
 }
 
 #ifdef ADMIN_MODE // 11
