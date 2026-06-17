@@ -17,8 +17,8 @@ ShellResult add_student(int id, char *name, int score, Student **head)
     if (find_student(id, head) == SHELL_OK)
         return SHELL_ERR_DUPLICATE_STUDENT;
 
-    // id 0 or 음수
-    if (id < 0 || id == 0)
+    // id 음수
+    if (id < 0)
         return SHELL_ERR_INVALID_ARGUMENT;
 
     // 잘못된 이름. 빈 이름이거나 ,가 들어간 이름
@@ -56,7 +56,6 @@ ShellResult add_student(int id, char *name, int score, Student **head)
         }
         serching->next = add_newstudent;
     }
-
     return SHELL_OK;
 }
 

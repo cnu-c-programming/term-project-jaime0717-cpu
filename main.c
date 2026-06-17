@@ -94,13 +94,13 @@ void run_shell(const char *csv_path)
             case SHELL_EXIT: // exit은 특별하게 처리.
                 return;
             case SHELL_ERR_UNKNOWN_COMMAND:
-                printf("Error: Unknown Command\n");
+                printf("Error: Unknown command or permission denied.\n");
                 break;
             case SHELL_ERR_INVALID_ARGUMENT:
                 printf("Error: Invalid Argument\n");
                 break;
             case SHELL_ERR_MISSING_ARGUMENT:
-                printf("Error: Missing Argument\n");
+                printf("Error: Missing Argument for Usage\n");
                 break;
             case SHELL_ERR_FILE_OPEN:
                 printf("Error: While File Opening\n");
@@ -109,7 +109,7 @@ void run_shell(const char *csv_path)
                 printf("Error: While File Writing\n");
                 break;
             case SHELL_ERR_STUDENT_NOT_FOUND:
-                printf("Error: Student Not Found\n");
+                printf("Error: student not found\n");
                 break;
             case SHELL_ERR_DUPLICATE_STUDENT:
                 printf("Error: Duplicate Student\n");
@@ -204,17 +204,17 @@ void run_command_file(const char *cmd_file, const char *csv_path)
                 {
                 case SHELL_OK:
                     break;
-                case SHELL_EXIT:                // exit은 특별하게 처리.
+                case SHELL_EXIT: // exit은 특별하게 처리.
                     fclose(fp);
                     return run_shell(csv_path); // exit 해주면 run_shell 돌리자.
                 case SHELL_ERR_UNKNOWN_COMMAND:
-                    printf("Error: Unknown Command\n");
+                    printf("Error: Unknown command or permission denied.\n");
                     break;
                 case SHELL_ERR_INVALID_ARGUMENT:
                     printf("Error: Invalid Argument\n");
                     break;
                 case SHELL_ERR_MISSING_ARGUMENT:
-                    printf("Error: Missing Argument\n");
+                    printf("Error: Missing Argument for Usage\n");
                     break;
                 case SHELL_ERR_FILE_OPEN:
                     printf("Error: While File Opening\n");
@@ -223,7 +223,7 @@ void run_command_file(const char *cmd_file, const char *csv_path)
                     printf("Error: While File Writing\n");
                     break;
                 case SHELL_ERR_STUDENT_NOT_FOUND:
-                    printf("Error: Student Not Found\n");
+                    printf("Error: student not found\n");
                     break;
                 case SHELL_ERR_DUPLICATE_STUDENT:
                     printf("Error: Duplicate Student\n");
