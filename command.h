@@ -26,11 +26,16 @@ typedef struct
 } Command;
 
 //handle 명령어들
+#ifdef ADMIN_MODE
 ShellResult handle_add(char *args, Student **head);
 
 ShellResult handle_delete(char *args, Student **head);
 
 ShellResult handle_update(char *args, Student **head);
+
+ShellResult handle_save(char *args, Student **head);
+#endif
+
 
 ShellResult handle_find(char *args, Student **head);
 
@@ -43,8 +48,6 @@ ShellResult handle_help(char *args, Student **head);
 ShellResult handle_clear(char *args, Student **head);
 
 ShellResult handle_exit(char *args, Student **head);
-
-ShellResult handle_save(char *args, Student **head);
 
 ShellResult handle_reload(char *args, Student **head);
 

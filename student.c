@@ -5,13 +5,11 @@
 #include "student.h"
 #include "command.h"
 
-Student *head = NULL; // 원래 student 파일에 있었는데, 함수들ㅇ **head를 인자로 받는 걸 보고, 여기로 이동! 다시 여기로! linked list는 여기서 구현해라.
+Student *real_head = NULL; // 원래 student 파일에 있었는데, 함수들ㅇ **head를 인자로 받는 걸 보고, 여기로 이동! ok. linked list는 sutdent에서
 
-#ifdef ADMIN_MODE
 ShellResult add_student(int id, char *name, int score, Student **head)
 {
     Student newstudent = {.id = id, .score = score, .next = NULL};
-    int i = 0;
     // 이름 추가
     strcpy(newstudent.name, name);
 
@@ -131,11 +129,9 @@ ShellResult update_student(int id, int score, Student **head)
         serching = serching->next;
     }
     serching->score = score;
-    printf("Student updated");
+    printf("Student updated\n");
     return SHELL_OK;
 }
-
-#elif defined(ADMIN_MODE) || defined(CLIENT_MODE)
 
 ShellResult find_student(int id, Student **head)
 {
@@ -173,12 +169,11 @@ ShellResult list_student(Student **head)
     }
 
     Student *checking = *head;
-    int count = 0;
 
     printf("ID   Name       Score\n"); // id 3 2, name 10 1, score
     while (checking != NULL)
     {
-        printf("%-3d  %-10s %d", checking->id, checking->name, checking->score);
+        printf("%-3d  %-10s %d\n", checking->id, checking->name, checking->score);
         checking = checking->next;
     }
     return SHELL_OK;
@@ -192,8 +187,8 @@ ShellResult stats_student(Student **head)
         return SHELL_ERR_STUDENT_NOT_FOUND;
     }
     Student *checking = *head;
-    int count = 1;
-    int sum = 0, max = 0, min = 0;
+    int count = 0;
+    int sum = 0, max = 0, min = 100;
 
     while (checking != NULL)
     {
@@ -243,7 +238,6 @@ ShellResult exit_student(Student **head)
         free(temp);
         temp = NULL;
     }
-    printf("Goodbye.");
+    printf("Goodbye.\n");
     return SHELL_EXIT;
 }
-#endif

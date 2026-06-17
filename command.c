@@ -4,6 +4,7 @@
 #include "file_io.h"
 #include "student.h"
 
+#ifdef ADMIN_MODE
 ShellResult handle_add(char *args, Student **head)
 { // 인자 부족, 잘못된 점수는 handle_add에서
     // args를 통해서 add 명령어 뒤에 있는 문자열 통으로 읽어오기
@@ -69,6 +70,13 @@ ShellResult handle_update(char *args, Student **head) // 학생 없음, 점수 �
     }
 }
 
+ShellResult handle_save(char *args, Student **head)
+{
+    return save_student(args,head);
+}
+#endif
+
+
 ShellResult handle_find(char *args, Student **head)
 {
     int id = 0;
@@ -88,11 +96,13 @@ ShellResult handle_find(char *args, Student **head)
 
 ShellResult handle_list(char *args, Student **head)
 {
+    (void)args;
     return list_student(head);
 }
 
 ShellResult handle_stats(char *args, Student **head)
 {
+    (void)args;
     return stats_student(head);
 }
 
@@ -118,11 +128,6 @@ ShellResult handle_exit(char *args, Student **head)
     (void)head;
 
     return exit_student(head);
-}
-
-ShellResult handle_save(char *args, Student **head)
-{
-    return save_student(args,head);
 }
 
 ShellResult handle_reload(char *args, Student **head)

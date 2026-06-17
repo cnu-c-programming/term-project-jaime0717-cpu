@@ -4,7 +4,7 @@
 #include "file_io.h"
 #include "student.h" //head 사용 가능!
 
-// #ifdef ADMIN_MODE
+#ifdef ADMIN_MODE
 ShellResult save_student(const char *csv_path, Student **head)
 {
     FILE *fp = fopen(csv_path, "w");
@@ -21,21 +21,21 @@ ShellResult save_student(const char *csv_path, Student **head)
     while (checking != NULL)
     {
         ++count;
-        if (fprintf(fp, "%d,%s,%d\n", checking->id, checking->name, checking->score) == 3)
+        if (fprintf(fp, "%d,%s,%d\n", checking->id, checking->name, checking->score) < 0)
+        {
+            fclose(fp);
+            return SHELL_ERR_FILE_WRITE;
+        } // 쓰는 거에 문제가 생김.
+        else
         {
             checking = checking->next;
         }
-        else
-        {
-            fclose(fp);
-            return SHELL_ERR_FILE_WRITE; // 쓰는 거에 문제가 생김.
-        }
     }
-    printf("Saved %d students to students.csv.", count);
+    printf("Saved %d students to students.csv.\n", count);
     fclose(fp);
     return SHELL_OK;
 }
-// #endif
+#endif
 
 ShellResult reload_student(const char *csv_path, Student **head)
 {
@@ -61,11 +61,35 @@ ShellResult reload_student(const char *csv_path, Student **head)
     fgets(header_trash, sizeof header_trash, fp);
 
     // 본론
+    ShellResult result;
+
     int count = 0;
     char parameter[300] = {0};
-    while (fgets(parameter, sizeof parameter, fp) != NULL) 
+    while (fgets(parameter, sizeof parameter, fp) != NULL)
     {
-        ShellResult result = handle_add(parameter, head);
+        // 하..괜히 add를 써가지고..
+        int id = 0, score = 0;
+        char name[32];
+        if (sscanf(parameter, "%d,%[^,],%d", &id, name, &score) == 3)
+        {
+            result = add_student(id, name, score, head); // head를 이중 포인터로 받아왔으므로 별다른 조치 x.
+        }
+        else
+        {
+            char score_char[10];
+            char id_char[10];
+            if (sscanf(parameter, "%d %s %s", &id, name, score_char) == 3)
+                result = SHELL_ERR_INVALID_ARGUMENT; // 잘못된 점수
+
+            if (sscanf(parameter, "%s %s %s", id_char, name, score_char) == 3)
+                result = SHELL_ERR_INVALID_ARGUMENT; // id, score다 string
+
+            if (sscanf(parameter, "%s %s %d", id_char, name, &score) == 3)
+                result = SHELL_ERR_INVALID_ARGUMENT; // id string
+
+            result = SHELL_ERR_MISSING_ARGUMENT; // 인자부족
+        }
+
         if (result != SHELL_OK)
         {
             fclose(fp);

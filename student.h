@@ -8,7 +8,8 @@ typedef struct Student { //5
     struct Student* next;
 } Student;
 
-extern Student* head;
+extern Student *real_head; // 원래 student 파일에 있었는데, 함수들ㅇ **head를 인자로 받는 걸 보고, 여기로 이동! ok. linked list는 sutdent에서
+
 
 ShellResult add_student(int id, char* name, int score, Student **head);
 
