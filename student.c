@@ -17,8 +17,8 @@ ShellResult add_student(int id, char *name, int score, Student **head)
     if (find_student(id, head) == SHELL_OK)
         return SHELL_ERR_DUPLICATE_STUDENT;
 
-    // id 음수
-    if (id < 0)
+    // id 0이나 음수
+    if (id <= 0)
         return SHELL_ERR_INVALID_ARGUMENT;
 
     // 잘못된 이름. 빈 이름이거나 ,가 들어간 이름
@@ -164,7 +164,8 @@ ShellResult list_student(Student **head)
     if (*head == NULL)
     {
         // 없을 경우 처리
-        return SHELL_ERR_STUDENT_NOT_FOUND;
+        printf("No students found\n");
+        return SHELL_OK;
     }
 
     Student *checking = *head;
@@ -183,7 +184,8 @@ ShellResult stats_student(Student **head)
     if (*head == NULL)
     {
         // 없을 경우 처리
-        return SHELL_ERR_STUDENT_NOT_FOUND;
+        printf("No student data available\n");
+        return SHELL_OK;
     }
     Student *checking = *head;
     int count = 0;

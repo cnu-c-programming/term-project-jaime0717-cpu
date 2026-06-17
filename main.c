@@ -128,7 +128,7 @@ void run_shell(const char *csv_path)
  *   - Execute each line as a command (same logic as run_shell).
  *   - Close the file when done.
  * --------------------------------------------------------------- */
-void run_command_file(const char *cmd_file, const char *csv_path)
+void run_command_file(const char *cmd_file, const char *csv_path) // 끝나면 끝인걸로.
 {
     ShellResult error;
     int count = 0;
@@ -148,26 +148,19 @@ void run_command_file(const char *cmd_file, const char *csv_path)
 
         while (fgets(line, sizeof line, fp) != NULL) // while문으로 끝날 때까지 돌려라 exit 없이 끝나면 run_shell로 가자.
         {
-            ++count; // 몇번째 라인 읽어주는지 확인하기 위해서.
             char parameter[100] = {0};
             char function[17] = {0}; // 그냥 17을 좋아해서
 
             int result = sscanf(line, "%s %[^\n]", function, parameter);
 
-            if (result == 0)
+            if (result == 0 || function[0] == '#' || result == EOF) //EOF관련 골치아팠다.
             {
-                printf("[command file:%d] ", count);
-                printf("\n");
-                continue; // 공백 처리
-            }
-            if (function[0] == '#') // #주석 처리
-            {
-                printf("[command file:%d] ", count);
-                printf("%s", line);
-                continue;
+                continue; // 공백 처리, #주석 처리
             }
             else
             {
+                ++count; // 몇번째 라인 읽어주는지 확인하기 위해서.
+
                 // command에 등록된 명령어인지 살펴봄, 있으면 handle이용해서 실행, 없으면 ShellResult로 오류.
 
                 Command *commands_pointer = commands;
@@ -206,7 +199,7 @@ void run_command_file(const char *cmd_file, const char *csv_path)
                     break;
                 case SHELL_EXIT: // exit은 특별하게 처리.
                     fclose(fp);
-                    return run_shell(csv_path); // exit 해주면 run_shell 돌리자.
+                    return; // exit 해주면 끝
                 case SHELL_ERR_UNKNOWN_COMMAND:
                     printf("Error: Unknown command or permission denied.\n");
                     break;
@@ -236,7 +229,7 @@ void run_command_file(const char *cmd_file, const char *csv_path)
         }
         fclose(fp);
     }
-    return run_shell(csv_path); // 다 읽음. 일반 코드 돌리기
+    return; // 다 읽음. 끝
 }
 
 int main(int argc, char *argv[])

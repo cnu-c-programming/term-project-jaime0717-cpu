@@ -11,9 +11,12 @@ ShellResult handle_add(char *args, Student **head)
     // 이 아래에는 args 나눠서 ShellResult add_student(int id, char *name, int score, Student **head)에 넣어주기.
     int id = 0, score = 0;
     char name[32];
+    ShellResult result;
     if (sscanf(args, "%d %s %d", &id, name, &score) == 3)
-    {
-        return add_student(id, name, score, head); // head를 이중 포인터로 받아왔으므로 별다른 조치 x.
+    { 
+        result = add_student(id, name, score, head); // head를 이중 포인터로 받아왔으므로 별다른 조치 x.
+        if(result == SHELL_OK) printf("Student added\n");
+        return result;
     }
     else
     {
