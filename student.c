@@ -204,7 +204,7 @@ ShellResult stats_student(Student **head)
         checking = checking->next;
     }
 
-    printf("Count: %d\nAverage: %.1f\nMax: %d\nMin: %d\n", count, sum / (float)count, max, min);
+    printf("Count: %d\nAverage: %f\nMax: %d\nMin: %d\n", count, sum / (float)count, max, min);
     return SHELL_OK;
 }
 
