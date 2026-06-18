@@ -201,28 +201,36 @@ void run_command_file(const char *cmd_file, const char *csv_path) // 끝나면 �
                     fclose(fp);
                     return; // exit 해주면 끝
                 case SHELL_ERR_UNKNOWN_COMMAND:
-                    printf("Error: Unknown command or permission denied.\n");
+                    printf("Error: Unknown command or permission denied. ");
+                    printf("Skipped line %d\n", count);
                     break;
                 case SHELL_ERR_INVALID_ARGUMENT:
-                    printf("Error: Invalid Argument\n");
+                    printf("Error: Invalid Argument. ");
+                    printf("Skipped line %d\n", count);
                     break;
                 case SHELL_ERR_MISSING_ARGUMENT:
-                    printf("Error: Missing Argument for Usage\n");
+                    printf("Error: Missing Argument for Usage. ");
+                    printf("Skipped line %d\n", count);
                     break;
                 case SHELL_ERR_FILE_OPEN:
-                    printf("Error: While File Opening\n");
+                    printf("Error: While File Opening. ");
+                    printf("Skipped line %d\n", count);
                     break;
                 case SHELL_ERR_FILE_WRITE:
-                    printf("Error: While File Writing\n");
+                    printf("Error: While File Writing ");
+                    printf("Skipped line %d\n", count);
                     break;
                 case SHELL_ERR_STUDENT_NOT_FOUND:
-                    printf("Error: student not found\n");
+                    printf("Error: student not found ");
+                    printf("Skipped line %d\n", count);
                     break;
                 case SHELL_ERR_DUPLICATE_STUDENT:
-                    printf("Error: Duplicate Student\n");
+                    printf("Error: Duplicate Student ");
+                    printf("Skipped line %d\n", count);
                     break;
                 case SHELL_ERR_INVALID_SCORE:
-                    printf("Error: Invalid Score\n");
+                    printf("Error: Invalid Score ");
+                    printf("Skipped line %d\n", count);
                     break;
                 }
             }
