@@ -153,7 +153,7 @@ void run_command_file(const char *cmd_file, const char *csv_path) // 끝나면 �
 
             int result = sscanf(line, "%s %[^\n]", function, parameter);
 
-            if (result == 0 || function[0] == '#' || result == EOF) //EOF관련 골치아팠다.
+            if (result == 0 || function[0] == '#' || result == EOF) // EOF관련 골치아팠다.
             {
                 continue; // 공백 처리, #주석 처리
             }
@@ -260,11 +260,36 @@ int main(int argc, char *argv[])
      *       }
      *   }
      */
+
+    if (argc == 1) // csv 없을 떄
+    {
+#ifdef ADMIN_MODE
+        printf("Usage: ./admin_shell <csv_file> [-f command_file]\n");
+        return 0;
+#elif defined(CLIENT_MODE)
+        printf("Usage: ./client_shell <csv_file> [-f command_file]\n");
+        return 0;
+#endif
+    }
+
     for (int i = 1; i < argc; i++)
     {
-        if (strcmp(argv[i], "-f") == 0 && i + 1 < argc)
+        if (strcmp(argv[i], "-f") == 0)
         {
-            cmd_file = argv[++i];
+            if (i + 1 < argc)
+            {
+                cmd_file = argv[++i];
+            }
+            else
+            {
+#ifdef ADMIN_MODE
+                printf("Usage: ./admin_shell <csv_file> [-f command_file]\n");
+                return 0;
+#elif defined(CLIENT_MODE)
+                printf("Usage: ./client_shell <csv_file> [-f command_file]\n");
+                return 0;
+#endif
+            }
         }
         else
         {
